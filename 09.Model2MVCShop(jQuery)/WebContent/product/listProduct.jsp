@@ -15,17 +15,46 @@
 //검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
 
 function fncGetList(currentPage){
-	document.getElementById("currentPage").value = currentPage;
-	document.detailForm.submit();
+	$("#currentPage").val(currentPage)
+	$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=${param.menu}").submit()
 }
 
 $(function(){
+	$(".ct_btn01:contains('검색')").on("click", function(){
+		javascript:fncGetList('1')
+	})
+})
+
+$(function(){
+	$(".stock div").css("text-align", "right")
+	
+	$(".stock span:contains('재고없는상품안보기')").on("click", function(){
+		//alert(1)
+		self.location = "/product/listProduct?menu=${param.menu}&stock=1"
+	})
+	
+	$(".stock span:contains('재고없는상품보기')").on("click", function(){
+		//alert(2)
+		self.location = "/product/listProduct?menu=${param.menu}"
+	})
+	
+})
+
+$(function(){
+	$(".prodName").css("color","green")
+	$(".prodName").on("click", function(){
+		var prodName = $(this).text().trim()
+		alert(prodName)
+		alert("${param.menu}")
+		//self.location = "/product/getProduct?prodNo="+prodName+"&menu=${param.menu}"
+	})
+})
+
+$(function(){
 	$("span:contains('배송하기')").on("click", function(){
-		//var prodNo = $("#prodNo").text().trim()
-		var prodNo = '${product.prodNo}';
-		alert(prodNo)
-		//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
-		//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo='<c:out value="${product.prodNo}"/>'";
+		var prodNo = $(this).text().trim()
+		//alert(prodNo)
+		self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
 	})
 })
 
@@ -36,7 +65,7 @@ $(function(){
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/product/listProduct?menu=${param.menu}" method="post">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -88,7 +117,7 @@ $(function(){
 						<img src="/images/ct_btnbg01.gif" width="17" height="23">
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncGetProductList('1');">검색</a>
+						검색
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -102,12 +131,12 @@ $(function(){
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
 	<tr>
-		<td colspan="11" >전체 ${resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지
-			<div align="right">
-			<a href="/product/listProduct?menu=${param.menu}&stock=1">재고없는상품안보기</a>
-			<a href="/product/listProduct?menu=${param.menu}">재고없는상품보기</a>
-			<input type="hidden" name="stock" value="${!empty search.stock ? search.stock : ""}" />
+		<td colspan="11" class="stock">전체 ${resultPage.totalCount } 건수, 현재 ${resultPage.currentPage } 페이지
+			<div>
+			<span>재고없는상품안보기</span>
+			<span>재고없는상품보기</span>
 			</div>
+			<input type="hidden" name="stock" value="${!empty search.stock ? search.stock : ""}" />
 		</td>
 		
 	</tr>
@@ -133,8 +162,7 @@ $(function(){
 		<td align="center">${i }</td>
 		<td></td>
 		<c:if test="${empty product.proTranCode }">
-			<td align="left"><a href="/product/getProduct?prodNo=${product.prodNo}
-			&menu=${param.menu}">${product.prodName}</a></td>
+			<td align="left" class="prodName">${product.prodName}</td>
 		</c:if>
 		<c:if test="${!empty product.proTranCode }">
 			<td align="left">${product.prodName}</td>		

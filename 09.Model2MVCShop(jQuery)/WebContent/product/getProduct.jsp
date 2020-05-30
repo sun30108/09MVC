@@ -10,6 +10,7 @@
 
 $(function(){
 	$("td.ct_btn01:contains('±¸¸Å')").on("click", function(){
+		//alert("${product.prodNo}")
 		location.href = "/purchase/addPurchase?prod_no=${product.prodNo}"
 	})
 })

@@ -34,7 +34,7 @@
 			 $( "td.ct_btn01:contains('검색')" ).on("click" , function() {
 				//Debug..
 				//alert(  $( "td.ct_btn01:contains('검색')" ).html() );
-				fncGetUserList(1);
+				fncGetList(1);
 			});
 			
 			
@@ -42,7 +42,7 @@
 			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 			//==> 3 과 1 방법 조합 : $(".className tagName:filter함수") 사용함.
 			$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
-					//Debug..
+				//Debug..
 					//alert(  $( this ).text().trim() );
 					self.location ="/user/getUser?userId="+$(this).text().trim();
 			});
@@ -153,7 +153,7 @@
 		<tr class="ct_list_pop">
 			<td align="center">${ i }</td>
 			<td></td>
-			<td align="left">
+			<td align="left" id="userId">
 				<!-- ////////////////// jQuery Event 처리로 변경됨 /////////////////////////
 				<a href="/user/getUser?userId=${user.userId}">${user.userId}</a>
 				////////////////////////////////////////////////////////////////////////////////////////////////// -->
