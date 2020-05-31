@@ -16,7 +16,14 @@
 
 function fncGetList(currentPage){
 	$("#currentPage").val(currentPage)
-	$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=${param.menu}").submit()
+	var menu = $(".mN").text().trim()
+	if(menu=="manage"){
+		alert(1)
+		$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=manage").submit()
+	}else{
+		alert(2)
+		$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=search").submit()
+	}
 }
 
 $(function(){
@@ -43,9 +50,11 @@ $(function(){
 $(function(){
 	$(".prodName").css("color","green")
 	$(".prodName").on("click", function(){
-		var prodName = $(this).text().trim()
-		alert(prodName)
-		alert("${param.menu}")
+		var prod = $(this).text().split("/")
+		var prodName = prod[0].trim()
+		var prodNo = prod[1].trim()
+		alert(prodNo)
+		//alert("${param.menu}")
 		//self.location = "/product/getProduct?prodNo="+prodName+"&menu=${param.menu}"
 	})
 })
@@ -53,8 +62,8 @@ $(function(){
 $(function(){
 	$("span:contains('배송하기')").on("click", function(){
 		var prodNo = $(this).text().trim()
-		//alert(prodNo)
-		self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
+		alert(prodNo)
+		//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
 	})
 })
 
@@ -64,6 +73,7 @@ $(function(){
 <body bgcolor="#ffffff" text="#000000">
 
 <div style="width:98%; margin-left:10px;">
+<span class="mN" style="visibility: hidden">${param.menu}</span>
 
 <form name="detailForm">
 
@@ -162,7 +172,9 @@ $(function(){
 		<td align="center">${i }</td>
 		<td></td>
 		<c:if test="${empty product.proTranCode }">
-			<td align="left" class="prodName">${product.prodName}</td>
+			<td align="left" class="prodName">${product.prodName}
+			<span class="pN" style="visibility: hidden">/${product.prodNo}</span>
+			</td>
 		</c:if>
 		<c:if test="${!empty product.proTranCode }">
 			<td align="left">${product.prodName}</td>		
@@ -176,7 +188,7 @@ $(function(){
 			<c:if test="${param.menu=='manage' }">
 					<c:if test="${empty product.proTranCode }">판매중</c:if>	
 					<c:if test="${product.proTranCode == '0  '}">구매완료
-						 <span>배송하기</span><span id="prodNo" style="visibility: hidden;">${product.prodNo }</span>
+						 <span>배송하기</span><span class="prodNo" style="visibility: hidden;">${product.prodNo }</span>
 					</c:if>
 					<c:if test="${product.proTranCode == '1  '}"></c:if>
 					<c:if test="${product.proTranCode == '2  '}">배송중</c:if>
