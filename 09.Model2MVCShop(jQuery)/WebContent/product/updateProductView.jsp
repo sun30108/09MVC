@@ -17,7 +17,6 @@
 </script>
 
 <script type="text/javascript">
-<!--
 function fncAddProduct(){
 	//Form 유효성 검증
  	var name = document.detailForm.prodName.value;
@@ -44,14 +43,28 @@ function fncAddProduct(){
 		
 	document.detailForm.action='/product/updateProduct';
 	document.detailForm.submit();
+	$("form").attr("mehtod", "post").attr("action", "/product/updateProduct").submit()
 }
--->
+
+$(function(){
+	$(".ct_btn01:contains('취소')").on("click", function(){		
+		history.go(-1)
+	})
+	
+	$("ct_btn01:contains('수정')").on("click", function(){
+		fncAddProduct()
+	})
+	
+	$(".img").on("click", function(){
+		show_calendar("document.detailForm.manuDate", document.detailForm.manuDate.value)
+	})
+})
 </script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm" method="post" >
+<form name="detailForm">
 
 <input type="hidden" name="prodNo" value="${product.prodNo}" />
 
@@ -120,8 +133,7 @@ function fncAddProduct(){
 		<td class="ct_write01">
 			<input type="text" readonly="readonly" name="manuDate" value="${product.manuDate}" 	
 						class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6">&nbsp;
-						<img 	src="../images/ct_icon_date.gif" width="15" height="15" 
-									onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)" />
+						<img 	class="img" src="../images/ct_icon_date.gif" width="15" height="15"  />
 		</td>
 	</tr>
 	<tr>
@@ -164,7 +176,7 @@ function fncAddProduct(){
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01"	style="padding-top: 3px;">
 						<c:if test="${empty product.proTranCode }">
-						<a href="javascript:fncAddProduct();">수정</a>
+						수정
 						</c:if>
 					</td>
 					<td width="14" height="23">
@@ -175,7 +187,7 @@ function fncAddProduct(){
 						<img src="/images/ct_btnbg01.gif"width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<a href="javascript:history.go(-1)">취소</a>
+						취소
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
