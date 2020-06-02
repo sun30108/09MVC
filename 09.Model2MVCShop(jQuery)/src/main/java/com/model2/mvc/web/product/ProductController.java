@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -54,72 +56,38 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="addProduct", method=RequestMethod.POST)
-	public String addProduct(@ModelAttribute("product") Product product, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String addProduct(@RequestParam(value="file", required = false) MultipartFile mf ,Product product, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		System.out.println("/product/addProduct : POST");
 		
-		if(FileUpload.isMultipartContent(request)) {
+		
+		System.out.println("fileName : "+ mf);
+		System.out.println(product);
+		
+		String savePath = "C:\\Users\\sun30\\git\\09MVC\\09.Model2MVCShop(jQuery)\\WebContent\\images\\uploadFiles\\";
+		
+		String originalFileName = mf.getOriginalFilename();
+		long fileSize = mf.getSize();
+		String safeFile = savePath+originalFileName;
+		
+		System.out.println("originalFileName : "+originalFileName);
+		System.out.println("fileSize : "+fileSize);
+		System.out.println("safeFile : "+safeFile);
+		
 			
-			String temDir = "C:\\Users\\sun30\\git\\09MVC\\09.Model2MVCShop(jQuery)\\WebContent\\images\\uploadFiles";
-			
-			DiskFileUpload fileUpload = new DiskFileUpload();
-			fileUpload.setRepositoryPath(temDir);
-			fileUpload.setSizeMax(1024 * 1024 * 10);
-			fileUpload.setSizeThreshold(1024 * 100);
-			
-			if(request.getContentLength() < fileUpload.getSizeMax()) {
-				StringTokenizer token = null;
-				
-				List fileItemList = fileUpload.parseRequest(request);
-				int Size = fileItemList.size();
-				for(int i = 0; i < Size; i++) {
-					FileItem fileItem = (FileItem)fileItemList.get(i);
-					if(fileItem.isFormField()) {
-						if(fileItem.getFieldName().equals("manuDate")) {
-							token = new StringTokenizer(fileItem.getString("euc-kr"), "-");
-							String manuDate = token.nextToken() + token.nextToken() + token.nextToken();
-							product.setManuDate(manuDate);
-						}else if(fileItem.getFieldName().equals("prodName")){
-							product.setProdName(fileItem.getString("euc-kr"));
-						}else if(fileItem.getFieldName().equals("prodDetail")) {
-							product.setProdDetail(fileItem.getString("euc-kr"));
-						}else if(fileItem.getFieldName().equals("price")) {
-							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));
-						}
-					} else {
-						
-						if(fileItem.getSize() > 0) {
-							int idx = fileItem.getName().lastIndexOf("\\");
-							if(idx == -1) {
-								idx = fileItem.getName().lastIndexOf("/");
-							}
-							String fileName = fileItem.getName().substring(idx+1);
-							product.setFileName(fileName);
-							try {
-								File uploadedFile = new File(temDir, fileName);
-								fileItem.write(uploadedFile);
-								
-							}catch(IOException e) {
-								System.out.println(e);
-							}
-						}else {
-							product.setFileName("../../images/empty.GIF");
-						}
-					}
-				}
-				
-				productService.addProduct(product);
-				
-				request.setAttribute("product", product);
-			}else {
-				int overSize = (request.getContentLength() / 1000000);
-				System.out.println("<script>alert('파일의 크기는 1MB까지 입니다. 올리신 파일의 용량은"+overSize+"MB입니다');");
-				System.out.println("history.back();</script>");
-			}
-			
-		}else {
-			System.out.println("인코딩 타입이 multipart/form-data가 아닙니다...");
+		try {
+			mf.transferTo(new File(safeFile));
+		} catch(IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
+		product.setFileName(originalFileName);
+		
+		productService.addProduct(product);
+		
+		
 		
 		return "/product/getProduct.jsp";
 	}
