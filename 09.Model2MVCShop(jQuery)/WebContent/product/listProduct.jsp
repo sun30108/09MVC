@@ -16,14 +16,7 @@
 
 function fncGetList(currentPage){
 	$("#currentPage").val(currentPage)
-	var menu = $(".mN").text().trim()
-	if(menu=="manage"){
-		alert(1)
-		$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=manage").submit()
-	}else{
-		alert(2)
-		$("form").attr("mehtd", "POST").attr("action", "/product/listProduct?menu=search").submit()
-	}
+	$("form").attr("mehtd", "POST").attr("action", "/product/listProduct").submit()
 }
 
 $(function(){
@@ -34,15 +27,16 @@ $(function(){
 
 $(function(){
 	$(".stock div").css("text-align", "right")
+	var menu = $(".mN").val().trim()
 	
 	$(".stock span:contains('재고없는상품안보기')").on("click", function(){
 		//alert(1)
-		self.location = "/product/listProduct?menu=${param.menu}&stock=1"
+		self.location = "/product/listProduct?menu="+menu+"&stock=1"
 	})
 	
 	$(".stock span:contains('재고없는상품보기')").on("click", function(){
 		//alert(2)
-		self.location = "/product/listProduct?menu=${param.menu}"
+		self.location = "/product/listProduct?menu="+menu
 	})
 	
 })
@@ -53,17 +47,17 @@ $(function(){
 		var prod = $(this).text().split("/")
 		var prodName = prod[0].trim()
 		var prodNo = prod[1].trim()
-		alert(prodNo)
-		//alert("${param.menu}")
-		//self.location = "/product/getProduct?prodNo="+prodName+"&menu=${param.menu}"
+		var menu = $(".mN").val().trim()
+		//alert(prodNo)
+		self.location = "/product/getProduct?prodNo="+prodNo+"&menu="+menu
 	})
 })
 
 $(function(){
 	$("span:contains('배송하기')").on("click", function(){
 		var prodNo = $(this).text().trim()
-		alert(prodNo)
-		//self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
+		//alert(prodNo)
+		self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
 	})
 })
 
@@ -73,9 +67,9 @@ $(function(){
 <body bgcolor="#ffffff" text="#000000">
 
 <div style="width:98%; margin-left:10px;">
-<span class="mN" style="visibility: hidden">${param.menu}</span>
 
 <form name="detailForm">
+<input class="mN" name="menu" type="hidden" value="${param.menu}" />
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>

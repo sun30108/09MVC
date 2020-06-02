@@ -19,10 +19,10 @@
 <script type="text/javascript">
 function fncAddProduct(){
 	//Form 유효성 검증
- 	var name = document.detailForm.prodName.value;
-	var detail = document.detailForm.prodDetail.value;
-	var manuDate = document.detailForm.manuDate.value;
-	var price = document.detailForm.price.value;
+ 	var name = $("input[name='prodName']").val()
+	var detail = $("input[name='prodDetail']").val()
+	var manuDate = $("input[name='manuDate']").val()
+	var price = $("input[name='price']").val()
 
 	if(name == null || name.length<1){
 		alert("상품명은 반드시 입력하여야 합니다.");
@@ -40,10 +40,8 @@ function fncAddProduct(){
 		alert("가격은 반드시 입력하셔야 합니다.");
 		return;
 	}
-		
-	document.detailForm.action='/product/updateProduct';
-	document.detailForm.submit();
-	$("form").attr("mehtod", "post").attr("action", "/product/updateProduct").submit()
+
+	$("form").attr("mehtod", "POST").attr("action", "/product/updateProduct").submit()
 }
 
 $(function(){
