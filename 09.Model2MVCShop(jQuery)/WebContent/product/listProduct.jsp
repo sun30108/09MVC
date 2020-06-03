@@ -48,9 +48,7 @@ $(function(){
 		var prodName = prod[0].trim()
 		var prodNo = prod[1].trim()
 		var menu = $(".mN").val().trim()
-		
 		//alert(prodNo)
-		
 		self.location = "/product/getProduct?prodNo="+prodNo+"&menu="+menu
 	})
 })
@@ -71,8 +69,8 @@ $(function(){
 <div style="width:98%; margin-left:10px;">
 
 <form name="detailForm">
+<input class="mN" name="menu" type="hidden" value="${param.menu}" />
 
-<input class="mN" type="hidden" name="menu" value="${param.menu}"/>
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
 		<td width="15" height="37">
