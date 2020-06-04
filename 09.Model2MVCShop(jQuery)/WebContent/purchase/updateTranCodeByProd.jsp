@@ -2,40 +2,43 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%--@ page import="java.util.*"  --%>
-
-
-<%--@ page import="com.model2.mvc.common.*" --%>
-<%--@page import="com.model2.mvc.common.util.CommonUtil"--%>
-<%--@page import="com.model2.mvc.service.domain.Product"--%>
-
-<%--
-request.setCharacterEncoding("euc-kr");
---%>
-
-<%--
-
-List<Product> list = (List<Product>)request.getAttribute("list");
-Page resultPage = (Page)request.getAttribute("resultPage");
-
-Search search = (Search)request.getAttribute("search");
-String searchCondition = CommonUtil.null2str(search.getSearchCondition());
-String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
-	
---%>
 
 <html>
 <head>
 <title>상품 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script type="text/javascript">
 
 function fncGetList(currentPage){
-	document.getElementById("currentPage").value = currentPage;
-	document.detailForm.submit();
+	$("#currentPage").val(currentPage)
+	$("form").attr("mehtd", "POST").attr("action", "/product/listProduct").submit()
 }
+
+$(function(){
+	$(".dely").on("click", function(){
+		var prod = $(this).text().split("/")
+		var prodNo = prod[1]
+		//alert(prodNo)
+		self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
+	})
+	
+	$(".prodName").css("color","green")
+	$(".prodName").on("click", function(){
+		var prod = $(this).text().split("/")
+		var prodName = prod[0].trim()
+		var prodNo = prod[1].trim()
+		//alert(prodNo)
+		self.location = "/product/getProduct?prodNo="+prodNo+"&menu=manage"
+	})
+	
+	$(".ct_btn01:contains('검색')").on("click", function(){
+		javascript:fncGetList('1')
+	})
+
+})
 
 </script>
 </head>
@@ -44,8 +47,9 @@ function fncGetList(currentPage){
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/product/listProduct?menu=manage" method="post">
+<form name="detailForm">
 
+<input class="mN" name="menu" type="hidden" value="manage" />
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
 		<td width="15" height="37">
@@ -87,7 +91,7 @@ function fncGetList(currentPage){
 						<img src="/images/ct_btnbg01.gif" width="17" height="23">
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncGetProductList('1');">검색</a>
+						검색
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23">
@@ -125,8 +129,9 @@ function fncGetList(currentPage){
 		<td align="center">${i }</td>
 		<td></td>
 			<c:if test="${empty product.proTranCode }">
-				<td align="left"><a href="/product/getProduct?prodNo=${product.prodNo }
-				&menu=manage">${product.prodName }</a></td>			
+				<td align="left" class="prodName">${product.prodName}
+				<span class="pN" style="display: none">/${product.prodNo}</span>	
+				</td>
 			</c:if>
 			<c:if test="${!empty product.proTranCode }">
 				<td align="left">${product.prodName }</td>			
@@ -141,8 +146,9 @@ function fncGetList(currentPage){
 						
 					<c:if test="${empty product.proTranCode }">판매중</c:if>
 					<c:if test="${product.proTranCode=='0  '}">
-						구매완료
-						 <a href="/purchase/updateTranCodeByProd?prodNo=${product.prodNo }&tranCode=2">배송하기</a>
+						구매완료 
+						<span class="dely">배송하기
+						<span style="display: none" >/${product.prodNo }</span></span>
 					</c:if>
 					<c:if test="${product.proTranCode=='1  '}"></c:if>
 					<c:if test="${product.proTranCode=='2  '}">배송중</c:if>
@@ -160,22 +166,7 @@ function fncGetList(currentPage){
 	<tr>
 		<td align="center">
 		<input type="hidden" id="currentPage" name="currentPage" value=""/>
-		<%-- if( resultPage.getCurrentPage() <= resultPage.getPageUnit() ){ %>
-					◀ 이전
-			<% }else{ %>
-					<a href="javascript:fncGetProductList('<%=resultPage.getCurrentPage()-1%>')">◀ 이전</a>
-			<% } %>
-
-			<%	for(int i=resultPage.getBeginUnitPage();i<= resultPage.getEndUnitPage() ;i++){	%>
-					<a href="javascript:fncGetProductList('<%=i %>');"><%=i %></a>
-			<% 	}  %>
-	
-			<% if( resultPage.getEndUnitPage() >= resultPage.getMaxPage() ){ %>
-					이후 ▶
-			<% }else{ %>
-					<a href="javascript:fncGetProductList('<%=resultPage.getEndUnitPage()+1%>')">이후 ▶</a>
-			<% } --%>
-			
+		
 			<jsp:include page="../common/pageNavigator.jsp"/>
 			
     	</td>

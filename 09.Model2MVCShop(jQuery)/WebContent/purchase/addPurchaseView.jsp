@@ -1,16 +1,5 @@
 <%@ page contentType="text/html; charset=euc-kr" %>
 
-<%--@page import="com.model2.mvc.service.domain.User"--%>
-<%--@page import="com.model2.mvc.service.domain.Product"--%>
-
-
-<%--
-	Product product = (Product)request.getAttribute("product");
---%>	
-<%--
-	User user = (User)request.getAttribute("user");
---%>	
-
 
 <html>
 <head>
@@ -19,21 +8,35 @@
 
 <title>Insert title here</title>
 
-<script type="text/javascript" src="../javascript/calendar.js">
-</script>
-
+<script type="text/javascript" src="../javascript/calendar.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-<!--
+
 function fncAddPurchase() {
-	document.addPurchase.submit();
+	$("form").attr("method","POST").attr("action","/purchase/addPurchase").submit()
 }
--->
+
+$(function(){
+	
+	$(".ct_btn01:contains('秒家')").on("click", function(){
+		history.go(-1)
+	})
+	
+	$(".ct_btn01:contains('备概')").on("click", function(){
+		fncAddPurchase()
+	})
+	
+	$(".hopeDely").on("click", function(){
+		show_calendar("document.addPurchase.divyDate", document.addPurchase.divyDate.value)	
+	})
+	
+})
 </script>
 </head>
 
 <body>
 
-<form name="addPurchase" method="post" action="/purchase/addPurchase">
+<form name="addPurchase">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -195,8 +198,7 @@ function fncAddPurchase() {
 		<td width="200" class="ct_write01">
 			<input 	type="text" readonly="readonly" name="divyDate" class="ct_input_g" 
 							style="width: 100px; height: 19px" maxLength="20"/>
-			<img 	src="../images/ct_icon_date.gif" width="15" height="15"	
-						onclick="show_calendar('document.addPurchase.divyDate', document.addPurchase.divyDate.value)"/>
+			<img class="hopeDely" src="../images/ct_icon_date.gif" width="15" height="15"	/>
 		</td>
 	</tr>
 	<tr>
@@ -214,7 +216,7 @@ function fncAddPurchase() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<a href="javascript:fncAddPurchase();">备概</a>
+						备概
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>
@@ -224,7 +226,7 @@ function fncAddPurchase() {
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>
 					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
-						<a href="javascript:history.go(-1)">秒家</a>
+						秒家
 					</td>
 					<td width="14" height="23">
 						<img src="/images/ct_btnbg03.gif" width="14" height="23"/>

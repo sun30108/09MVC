@@ -1,23 +1,25 @@
 <%@ page contentType="text/html; charset=euc-kr" %>
 
-<%--@page import="com.model2.mvc.service.domain.Purchase"--%>
-
-
-<%--
-	Purchase purchase = (Purchase)request.getAttribute("purchase");
---%>
-
 <html>
 <head>
 <title>Insert title here</title>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("form").attr("method", "POST").attr("action", "/purchase/updatePurchase")
+})
+
+</script>
 </head>
 
 <body>
 
-<form name="updatePurchase" action="/purchase/updatePurchase?tranNo=0" method="post">
+<form name="updatePurchase" >
 
 다음과 같이 구매가 되었습니다.
 
+<input type="hidden" name="tranNo" value="0"/>
 <table border=1>
 	<tr>
 		<td>물품번호</td>

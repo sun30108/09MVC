@@ -2,33 +2,43 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%--@ page import="java.util.*"  --%>
-
-<%--@ page import="com.model2.mvc.common.*" --%>
-<%--@page import="com.model2.mvc.service.domain.Purchase"--%>
-<%--@page import="com.model2.mvc.common.util.CommonUtil"--%>
-
-<%--
-	List<Purchase> list = (List<Purchase>)request.getAttribute("list");
-	Page resultPage=(Page)request.getAttribute("resultPage");
-	
-	Search search = (Search)request.getAttribute("search");
-	//==> null 을 ""(nullString)으로 변경
-	String searchCondition = CommonUtil.null2str(search.getSearchCondition());
-	String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
---%>
-
 <html>
 <head>
 <title>구매 목록조회</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 	function fncGetList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-		document.detailForm.submit();
+		$("#currentPage").val(currentPage)
+		$("form").attr("method", "POST").attr("action", "/purchase/listPurchase").submit()
 	}
+	$(function(){
+		
+		$("td:contains('물건도착')").on("click",function(){
+			var tran = $(this).text().split("/")
+			var tranNo = tran[1].trim()
+			//alert(tranNo)
+			location.href = "/purchase/updateTranCode?tranNo="+tranNo+"&tranCode=3"
+		})
+		
+		$(".No").on("click",function(){
+			var tran = $(this).text().split("/")
+			var tranNo = tran[1].trim()
+			//alert(tranNo)
+			location.href = "/purchase/getPurchase?tranNo="+tranNo
+		})
+		
+		$(".No").css("color", "green")
+		
+		$(".ct_list_pop td:nth-child(3)").on("click", function(){
+			var userId = $(this).text().trim()
+			location.href = "/user/getUser?userId="+userId
+		})
+		
+		$(".ct_list_pop td:nth-child(3)").css("color", "red")
+		
+	})
 </script>
 </head>
 
@@ -36,7 +46,7 @@
 
 <div style="width: 98%; margin-left: 10px;">
 
-<form name="detailForm" action="/purchase/listPurchase" method="post">
+<form name="detailForm">
 
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
@@ -80,7 +90,8 @@
 	<tr class="ct_list_pop">
 		<td align="center">
 			<c:if test="${purchase.tranCode=='0  ' }">
-			<a href="/purchase/getPurchase?tranNo=${purchase.tranNo}">${i }</a>		
+			<span class="No" >${i }
+			<span style="display: none">/${purchase.tranNo}</span></span>
 			</c:if>
 			<c:if test="${!(purchase.tranCode=='0  ') }">
 			${i }			
@@ -88,7 +99,7 @@
 		</td>
 		<td></td>
 		<td align="left">
-			<a href="/user/getUser?userId=${purchase.buyer.userId}">${purchase.buyer.userId}</a>
+			${purchase.buyer.userId}
 		</td>
 		<td></td>
 		<td align="left">${purchase.receiverName }</td>
@@ -106,7 +117,7 @@
 					<c:if test="${purchase.tranCode=='0  ' }"></c:if>
 					<c:if test="${purchase.tranCode=='1  ' }"></c:if>
 					<c:if test="${purchase.tranCode=='2  ' }">
-					<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo }&tranCode=3">물건도착</a>
+					물건도착<span style="display: none">/${purchase.tranNo}</span>
 					</c:if>
 					<c:if test="${purchase.tranCode=='3  ' }"></c:if>
 		</td>
@@ -121,21 +132,6 @@
 	<tr>
 		<td align="center">
 		<input type="hidden" id="currentPage" name="currentPage" value=""/>
-		<%-- if( resultPage.getCurrentPage() <= resultPage.getPageUnit() ){ %>
-					◀ 이전
-			<% }else{ %>
-					<a href="javascript:fncGetPurchaseList('<%=resultPage.getCurrentPage()-1%>')">◀ 이전</a>
-			<% } %>
-
-			<%	for(int i=resultPage.getBeginUnitPage();i<= resultPage.getEndUnitPage() ;i++){	%>
-					<a href="javascript:fncGetPurchaseList('<%=i %>');"><%=i %></a>
-			<% 	}  %>
-	
-			<% if( resultPage.getEndUnitPage() >= resultPage.getMaxPage() ){ %>
-					이후 ▶
-			<% }else{ %>
-					<a href="javascript:fncGetPurchaseList('<%=resultPage.getEndUnitPage()+1%>')">이후 ▶</a>
-			<% } --%>
 			
 			<jsp:include page="../common/pageNavigator.jsp"/>
 			
