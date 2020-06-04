@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -93,7 +94,8 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="getProduct", method=RequestMethod.GET)
-	public String getProduct(@RequestParam("prodNo") int prodNo, @RequestParam(value="menu", required=false) String menu, Model model) throws Exception{
+	public String getProduct(@RequestParam("prodNo") int prodNo, @RequestParam(value="menu", required=false) String menu, Model model,
+			HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		System.out.println("/product/getProduct : GET");
 		
@@ -101,7 +103,23 @@ public class ProductController {
 		
 		model.addAttribute("product", product);
 		
-		
+		//Cookie
+		Cookie[] cookies = request.getCookies();
+		String history = "";
+		if(cookies != null) {
+			for(Cookie c: cookies) {
+				System.out.println("ƒÌ≈∞¿Ã∏ß : "+c.getName());
+				if(c.getName().equals("history")) {
+					history += c.getValue()+",";
+				}
+			}
+			history += prodNo;
+			
+			Cookie cookie = new Cookie("history", history);
+			cookie.setPath("/");
+			response.addCookie(cookie);
+		}//
+				
 		if(menu != null && menu.equals("manage")) {
 			return "/product/updateProductView.jsp";
 		}else {

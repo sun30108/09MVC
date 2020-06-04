@@ -49,6 +49,10 @@
 		$("td.ct_btn01:contains('√Îº“')").on("click", function(){
 			$("form")[0].reset()
 		})
+		
+		$(".DateCalender").on("click", function(){
+			show_calendar("document.detailForm.manuDate", document.detailForm.manuDate.value)		
+		})
 	})
 	
 </script>
@@ -121,8 +125,7 @@
 		<td class="ct_write01">
 			<input type="text" name="manuDate" readonly="readonly" class="ct_input_g"  
 						style="width: 100px; height: 19px"	maxLength="10" minLength="6"/>
-				&nbsp;<img src="../images/ct_icon_date.gif" width="15" height="15" 
-										onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)"/>
+				&nbsp;<img class="DateCalender" src="../images/ct_icon_date.gif" width="15" height="15" />
 		</td>
 	</tr>
 	<tr>

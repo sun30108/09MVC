@@ -54,8 +54,9 @@ $(function(){
 })
 
 $(function(){
-	$("span:contains('배송하기')").on("click", function(){
-		var prodNo = $(this).text().trim()
+	$(".dely").on("click", function(){
+		var prod = $(this).text().split("/")
+		var prodNo = prod[1]
 		//alert(prodNo)
 		self.location = "/purchase/updateTranCodeByProd?tranCode=2&prodNo="+prodNo
 	})
@@ -167,7 +168,7 @@ $(function(){
 		<td></td>
 		<c:if test="${empty product.proTranCode }">
 			<td align="left" class="prodName">${product.prodName}
-			<span class="pN" style="visibility: hidden">/${product.prodNo}</span>
+			<span class="pN" style="display: none">/${product.prodNo}</span>
 			</td>
 		</c:if>
 		<c:if test="${!empty product.proTranCode }">
@@ -182,7 +183,8 @@ $(function(){
 			<c:if test="${param.menu=='manage' }">
 					<c:if test="${empty product.proTranCode }">판매중</c:if>	
 					<c:if test="${product.proTranCode == '0  '}">구매완료
-						 <span>배송하기</span><span class="prodNo" style="visibility: hidden;">${product.prodNo }</span>
+						 <span class="dely">배송하기
+						<span style="display: none" >/${product.prodNo }</span></span>
 					</c:if>
 					<c:if test="${product.proTranCode == '1  '}"></c:if>
 					<c:if test="${product.proTranCode == '2  '}">배송중</c:if>
